@@ -75,3 +75,13 @@ Ask ONE guiding question first. Never give the full answer directly."""}]}]
 @app.get("/api/health")
 def health():
     return {"status": "ok", "slides_count": col.count()}
+
+@app.post("/api/upload-embeddings")
+def upload_embeddings(data: EmbeddingUpload):
+    col.add(
+        ids=[f"ext_{hash(str(data.embedding[:5]))}"],
+        embeddings=[data.embedding],
+        documents=[data.text_preview],
+        metadatas=[data.metadata]
+    )
+    return {"status": "added"}
